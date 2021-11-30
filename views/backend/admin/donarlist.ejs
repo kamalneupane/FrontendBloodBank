@@ -1,0 +1,35 @@
+<%- include('dashboard.ejs')%>
+<h2 class="text-center">Donars List</h2>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody >
+            <% if(users.length > 0) {%>
+                <% users.forEach(user => { %>
+                    <tr>
+                        <td><%= user._id%></td>
+                        <td><%= user.name%></td>
+                        <td><%= user.email%></td>
+                        <td><%= user.role%></td>
+                        <td class="btn-group">
+                            <a href="/admin/user/edit/<%= user._id%>" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                            <form action="/admin/user/<%= user._id%>?_method=DELETE" method="post">
+                                <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+
+            <% })%>
+            <% } else { %>
+                <p> No donar available</p>
+            <% } %>
+            
+        </tbody>
+    </table>

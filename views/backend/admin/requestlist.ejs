@@ -1,0 +1,46 @@
+<%- include('dashboard.ejs') %>
+<h2 class="text-center">Blood Request</h2>
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Blood Group</th>
+            <th>Units</th>
+            <th>Age:</th>
+            <th>Reason:</th>
+            <th>Phone:</th>
+            <th>Address:</th>
+            <th>Status:</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if(requests.length > 0) { %>
+            <% requests.forEach(request => { %>
+                <tr>
+                    <td><%= request.user.name%></td>
+                    <td><%= request.user.email%></td>
+                    <td><%= request.requestGroup.name%></td>
+                    <td><%= request.requestGroup.units%></td>
+                    <td><%= request.age%></td>
+                    <td><%= request.reason%></td>
+                    <td><%= request.phone%></td>
+                    <td><%= request.address%></td>
+                    <td><%= request.status%></td>
+                    <td class="btn-group">
+                        <form action="/admin/request/<%= request.id%>?_method=PUT" method="post">
+                            <input type="hidden" name="status" id="status" value="approved">
+                            <button class="btn btn-success"><i class="fas fa-check-circle"></i></button>
+                        </form>
+                        <form action="" method="post">
+                            <button class="btn btn-danger"><i class="fas fa-times"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } else { %>
+            <p>You don't have any request histroy</p>
+        <% } %>
+    </tbody>
+</table>

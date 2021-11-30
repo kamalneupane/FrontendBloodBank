@@ -1,0 +1,38 @@
+<%- include('dashboard.ejs') %>
+<h2 class="text-center">Donations History</h2>
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Blood Group</th>
+            <th>Units</th>
+            <th>Age:</th>
+            <th>Disease:</th>
+            <th>Phone:</th>
+            <th>Address:</th>
+            <th>Status:</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if(donations.length > 0) { %>
+            <% donations.forEach(donation => { %>
+                <tr>
+                    <td><%= donation.user.name%></td>
+                    <td><%= donation.user.email%></td>
+                    <td><%= donation.donateGroup.name%></td>
+                    <td><%= donation.donateGroup.units%></td>
+                    <td><%= donation.age%></td>
+                    <td><%= donation.disease%></td>
+                    <td><%= donation.phone%></td>
+                    <td><%= donation.address%></td>
+                    <td class="btn-group">
+                        <button class="btn btn-success"><i class="fas fa-check-circle"></i></button>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } else { %>
+            <p>No donations histroy</p>
+        <% } %>
+    </tbody>
+</table>

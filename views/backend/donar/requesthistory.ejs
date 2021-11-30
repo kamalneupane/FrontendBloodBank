@@ -1,0 +1,32 @@
+<%- include('dashboard.ejs') %>
+<h2 class="text-center">My Request History</h2>
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Blood Group</th>
+            <th>Units</th>
+            <th>Age:</th>
+            <th>Reason:</th>
+            <th>Phone:</th>
+            <th>Address:</th>
+            <th>Status:</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if(requests.length > 0) { %>
+            <% requests.forEach(request => { %>
+                <tr>
+                    <td><%= request.requestGroup.name%></td>
+                    <td><%= request.requestGroup.units%></td>
+                    <td><%= request.age%></td>
+                    <td><%= request.reason%></td>
+                    <td><%= request.phone%></td>
+                    <td><%= request.address%></td>
+                    <td><%= request.status%></td>
+                </tr>
+            <% }) %>
+        <% } else { %>
+            <p>You don't have any requests histroy</p>
+        <% } %>
+    </tbody>
+</table>

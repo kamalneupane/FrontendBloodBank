@@ -1,0 +1,26 @@
+<%- include('dashboard.ejs')%>
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+        <h3 class="text-center">Your Details</h3>
+        <table class="table">
+            <tr>
+                <th>Name:</th>
+                <td><%= user.name%></td>
+            </tr>
+            <tr>
+                <th>Email:</th>
+                <td><%= user.email%></td>
+            </tr>
+            <tr>
+                <th>Role:</th>
+                <td><%= user.role%></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-md-6 m-auto">
+        <a href="/admin/me/update" class="btn btn-secondary">Update Profile</a>
+        <a href="/admin/password/update" class="btn btn-secondary">Change Password</a>
+    </div>
+</div>

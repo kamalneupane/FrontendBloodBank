@@ -21,7 +21,11 @@ const {
     forgotPasswordForm,
     resetPasswordForm,
     showChangePasswordForm,
-    showUpdateProfileForm
+    showUpdateProfileForm,
+    getAdminProfile,
+    showChangePasswordFormAdmin,
+    showUpdateProfileFormAdmin,
+    updateProfileAdmin
 } = require('../controller/authController')
 
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth')
@@ -43,6 +47,13 @@ router.route('/donar/password/update').get(isAuthenticatedUser, authorizeRoles('
 router.route('/donar/password/update').put(isAuthenticatedUser, authorizeRoles('user'), updatePassword)
 router.route('/donar/me/update').get(isAuthenticatedUser, authorizeRoles('user'), showUpdateProfileForm)
 router.route('/donar/me/update').put(isAuthenticatedUser, authorizeRoles('user'), updateProfile)
+
+
+router.route('/admin/me').get(isAuthenticatedUser, authorizeRoles('admin'), getAdminProfile)
+router.route('/admin/password/update').get(isAuthenticatedUser, authorizeRoles('admin'), showChangePasswordFormAdmin)
+router.route('/admin/password/update').put(isAuthenticatedUser, authorizeRoles('admin'), updatePassword)
+router.route('/admin/me/update').get(isAuthenticatedUser, authorizeRoles('admin'), showUpdateProfileFormAdmin)
+router.route('/admin/me/update').put(isAuthenticatedUser, authorizeRoles('admin'), updateProfileAdmin)
 
 router.route('/admin/users').get(isAuthenticatedUser, authorizeRoles('admin'), getAllUsers)
 router.route('/admin/user/edit/:id').get(isAuthenticatedUser, authorizeRoles('admin'), editUser)

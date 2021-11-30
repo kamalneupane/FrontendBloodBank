@@ -158,16 +158,27 @@ exports.resetPassword = catchAsyncErrors(async( req, res, next) => {
     sendToken(user, 200, res);
     res.redirect('/login')
 })
-// get currently logged in user details => /me
+// get currently logged in user details => /donar/me
 exports.getUserProfile = catchAsyncErrors( async(req, res, next) => {
     const user = await User.findById(req.user.id);
     res.render('backend/donar/profile', {
         user
     })
 }) 
+// get currently logged in admin details => /admin/me
+exports.getAdminProfile = catchAsyncErrors( async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+    res.render('backend/admin/profile',{
+        user
+    })
+});
 // show change password form
 exports.showChangePasswordForm = (req, res, next) => {
     res.render('backend/donar/changepassword')
+}
+// show change password form Admin
+exports.showChangePasswordFormAdmin = (req, res, next) => {
+    res.render('backend/admin/changepassword')
 }
 // update/change password => /password/update
 exports.updatePassword = catchAsyncErrors( async(req, res, next) => {
@@ -191,6 +202,13 @@ exports.showUpdateProfileForm = async (req, res, next) => {
         user
     });
 }
+// show update profile form admin
+exports.showUpdateProfileFormAdmin = async(req, res, next) => {
+    const user = await User.findById(req.user.id);
+    res.render('backend/admin/updateprofile',{
+        user
+    });
+}
 // update user profile => /me/update
 exports.updateProfile = catchAsyncErrors( async(req, res, next) => {
     const newUserData = {
@@ -205,6 +223,21 @@ exports.updateProfile = catchAsyncErrors( async(req, res, next) => {
     })
 
     res.redirect('/donar/me')
+})
+// update admin profile => admin/me/update
+exports.updateProfileAdmin = catchAsyncErrors(async (req, res, next) => {
+    const newUserData = {
+        name: req.body.name,
+        email: req.body.email 
+     }
+ 
+     const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+         new: true,
+         runValidators: true,
+         useFindAndModify: false
+     })
+ 
+     res.redirect('/admin/me');
 })
 
 // logout user => /logout

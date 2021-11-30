@@ -158,15 +158,18 @@ exports.resetPassword = catchAsyncErrors(async( req, res, next) => {
     sendToken(user, 200, res);
     res.redirect('/login')
 })
-// get currently logged in user details
+// get currently logged in user details => /me
 exports.getUserProfile = catchAsyncErrors( async(req, res, next) => {
     const user = await User.findById(req.user.id);
-    res.status(200).json({
-        success: true,
+    res.render('backend/donar/profile', {
         user
     })
 }) 
-// update/change password
+// show change password form
+exports.showChangePasswordForm = (req, res, next) => {
+    res.render('backend/donar/changepassword')
+}
+// update/change password => /password/update
 exports.updatePassword = catchAsyncErrors( async(req, res, next) => {
     const user = await User.findById(req.user.id).select('+password');
     // check previous user password
@@ -177,10 +180,18 @@ exports.updatePassword = catchAsyncErrors( async(req, res, next) => {
     user.password = req.body.password;
     await user.save();
 
-    sendToken(user, 200, res);
+    // sendToken(user, 200, res);
+    res.redirect('/logout');
 
 })
-// update user profile
+// show update profile form
+exports.showUpdateProfileForm = async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+    res.render('backend/donar/updateprofile',{
+        user
+    });
+}
+// update user profile => /me/update
 exports.updateProfile = catchAsyncErrors( async(req, res, next) => {
     const newUserData = {
        name: req.body.name,
@@ -193,12 +204,10 @@ exports.updateProfile = catchAsyncErrors( async(req, res, next) => {
         useFindAndModify: false
     })
 
-    res.status(200).json({
-        success: true
-    })
+    res.redirect('/donar/me')
 })
 
-// logout user
+// logout user => /logout
 exports.logoutUser = catchAsyncErrors( async (req, res, next) => {
     res.cookie('token',null,{
         expires: new Date(Date.now()),

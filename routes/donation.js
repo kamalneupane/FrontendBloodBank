@@ -13,10 +13,10 @@ const {
 
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth')
 
-router.route('/donar/donation').get(isAuthenticatedUser, showDonationForm)
-router.route('/donation/new').post(isAuthenticatedUser, newDonation)
-router.route('/donation/:id').get(isAuthenticatedUser, getSingleDonation)
-router.route('/donations/me').get(isAuthenticatedUser, myDonations)
+router.route('/donar/donation').get(isAuthenticatedUser, authorizeRoles('user'), showDonationForm)
+router.route('/donation/new').post(isAuthenticatedUser, authorizeRoles('user'), newDonation)
+router.route('/donation/:id').get(isAuthenticatedUser, authorizeRoles('user'), getSingleDonation)
+router.route('/donations/me').get(isAuthenticatedUser, authorizeRoles('user'), myDonations)
 router.route('/admin/donations').get(isAuthenticatedUser, authorizeRoles('admin'), allDonations);
 router.route('/admin/donations/history').get(isAuthenticatedUser,authorizeRoles('admin') ,donationHistory)
 router.route('/admin/donation/:id')

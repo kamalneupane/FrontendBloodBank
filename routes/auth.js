@@ -19,14 +19,16 @@ const {
     showAdminDashboard,
     editUser,
     forgotPasswordForm,
-    resetPasswordForm
+    resetPasswordForm,
+    showChangePasswordForm,
+    showUpdateProfileForm
 } = require('../controller/authController')
 
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth')
 
 router.route('/login').get(showLoginPage)
 router.route('/register').get(showRegisterPage)
-router.route('/donar/dashboard').get(isAuthenticatedUser, showDonarDashboard)
+router.route('/donar/dashboard').get(isAuthenticatedUser, authorizeRoles('user'), showDonarDashboard)
 router.route('/admin/dashboard').get(isAuthenticatedUser, authorizeRoles('admin'), showAdminDashboard);
 router.route('/register').post(registerUser);
 router.route('/login').post(loginUser)
@@ -36,9 +38,11 @@ router.route('/password/forgot').get(forgotPasswordForm)
 router.route('/password/forgot').post(forgotPassword)
 router.route('/password/reset/:token').get(resetPasswordForm).put(resetPassword)
 
-router.route('/me').get(isAuthenticatedUser, getUserProfile)
-router.route('/password/update').put(isAuthenticatedUser, updatePassword)
-router.route('/me/update').put(isAuthenticatedUser, updateProfile)
+router.route('/donar/me').get(isAuthenticatedUser, authorizeRoles('user'), getUserProfile)
+router.route('/donar/password/update').get(isAuthenticatedUser, authorizeRoles('user'), showChangePasswordForm)
+router.route('/donar/password/update').put(isAuthenticatedUser, authorizeRoles('user'), updatePassword)
+router.route('/donar/me/update').get(isAuthenticatedUser, authorizeRoles('user'), showUpdateProfileForm)
+router.route('/donar/me/update').put(isAuthenticatedUser, authorizeRoles('user'), updateProfile)
 
 router.route('/admin/users').get(isAuthenticatedUser, authorizeRoles('admin'), getAllUsers)
 router.route('/admin/user/edit/:id').get(isAuthenticatedUser, authorizeRoles('admin'), editUser)

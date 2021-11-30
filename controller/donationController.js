@@ -73,7 +73,7 @@ exports.allDonations = catchAsyncErrors( async(req, res, next) => {
 })
 // donation history => admin/donations/history
 exports.donationHistory = catchAsyncErrors(async (req, res, next) => {
-    const donations = await Donation.find({ status: 'approved' }).populate('user','name email');
+    const donations = await Donation.find({ status : ['rejected' , 'approved'] }).populate('user','name email');
     res.render('backend/admin/donationhistory',{
         donations
     })
@@ -86,6 +86,12 @@ exports.updateDonation = catchAsyncErrors(async(req, res, next) => {
     }
     if(donation.status === 'approved'){
         return next(new ErrorHandler('You have already respond this donation request'))
+    }
+
+    if(req.body.status === 'rejected'){
+        donation.status = req.body.status;
+        await donation.save();
+        return res.redirect('/admin/donations/history')
     }
     const  id = donation.donateGroup.blood
     const unit = donation.donateGroup.units

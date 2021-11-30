@@ -252,8 +252,28 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
     if(!user) {
         return next(new ErrorHandler(`User not found with ${req.params.id}`, 400))
     }
-    await user.remove();
+
+    deleteUserDonation(req.params.id)
+    deleteUserRequest(req.params.id)
+
+
+    // await user.remove();
+
+    
 
     res.redirect('/admin/users')
-    
+
 })
+
+async function deleteUserDonation(id){
+    const donations = await Donation.find({ user: id })
+    if(donations.length < 1 || donations === undefined) return 
+    // await donations.remove()
+}
+
+async function deleteUserRequest(id){
+    const requests = await Request.find({ user: id})
+    if(requests.length < 1 || requests === undefined) return 
+    console.log('working fine')
+    // await requests.remove()
+}

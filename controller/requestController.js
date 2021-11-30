@@ -118,5 +118,5 @@ exports.deleteRequest = catchAsyncErrors(async (req, res, next) => {
     }
     await request.remove();
 
-    res.redirect('admin/requests')
+    res.redirect('/admin/requests')
 })

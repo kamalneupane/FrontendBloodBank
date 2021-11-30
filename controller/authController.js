@@ -255,5 +255,5 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
     await user.remove();
 
     res.redirect('/admin/users')
-
+    
 })

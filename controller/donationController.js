@@ -118,7 +118,5 @@ exports.deleteDonation = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Donation not found', 404))
     }
     await donation.remove();
-    res.status(200).json({
-        success: true
-    })
+    res.redirect('/admin/donations')
 })

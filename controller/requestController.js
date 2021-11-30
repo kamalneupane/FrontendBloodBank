@@ -72,7 +72,7 @@ exports.allRequest = catchAsyncErrors( async (req, res, next) => {
 })
 // request history => admin/requests/history
 exports.requestHistory = catchAsyncErrors(async (req, res, next) => {
-    const requests = await Request.find({ status: 'approved'}).populate('user','name email')
+    const requests = await Request.find({ status: ['approved','rejected']}).populate('user','name email')
     res.render('backend/admin/requesthistory',{
         requests
     })
@@ -81,10 +81,17 @@ exports.requestHistory = catchAsyncErrors(async (req, res, next) => {
 // update/process request => admin/order/:id
 exports.updateRequest = catchAsyncErrors( async( req, res, next) => {
     const request = await Request.findById(req.params.id);
+    if(!request){
+        return next(new ErrorHandler('Request not found with that id',404))
+    }
     if(request.status === 'approved'){
         return next(new ErrorHandler('You have already respond this request',400))
     }
-
+    if(req.body.status === 'rejected'){
+        request.status = req.body.status;
+        await request.save();
+        return res.redirect('/admin/requests/history')
+    }
     const  id = request.requestGroup.blood
     const unit = request.requestGroup.units
 

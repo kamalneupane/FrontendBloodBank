@@ -12,11 +12,15 @@ const Blood = require('../models/blood')
 exports.showLoginPage = (req, res) => res.render('frontend/login')
 exports.showRegisterPage = (req, res) => res.render('frontend/register')
 exports.showAdminDashboard = async (req, res, next) => {
+    
     const donation = await Donation.find().count();
     const total_donar = await User.find({ role:'user'}).count();
     const request = await Request.find().count();
-
+    
     const bloods = await Blood.find();
+
+    
+
     if(bloods.length > 0){
         var total = bloods.map(item => item.units).reduce((acc, cur) => acc + cur )
     }

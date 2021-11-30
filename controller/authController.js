@@ -36,8 +36,13 @@ exports.showAdminDashboard = async (req, res, next) => {
         user: req.user
     })
 }
-exports.showDonarDashboard = (req, res) => res.render('backend/donar/dashboard', {user: req.user })
-
+exports.showDonarDashboard = async (req, res) => {
+    const bloods = await Blood.find();
+    res.render('backend/donar/index', { 
+        bloods,
+        user: req.user 
+    })
+}
 exports.registerUser = catchAsyncErrors(async(req, res, next) => {
     const { name, email, password } = req.body;
     

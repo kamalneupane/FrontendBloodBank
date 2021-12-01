@@ -1,0 +1,26 @@
+<%- include('dashboard.ejs') %>
+<% if(donations.length > 0) { %>
+    
+
+    <div class="row mt-3">
+        <% donations.forEach(donation => { %>
+        <div class="col-md-4 border m-auto">
+            <ul>
+                <li>Name: <%= donation.user.name %></li>
+                <li>Age: <%= donation.age %></li>
+                <li>Address: <%= donation.address %></li>
+                <li>Group: <%= donation.donateGroup.name %></li>
+                <li>Status: <%= donation.status%> </li>
+            </ul>
+        </div>
+        <%  })  %>
+    </div>
+        
+    
+<% } else { %>
+    <div class="row mt-4">
+        <div class="col-md-4 m-auto">
+            <h4>No result found</h4>
+        </div>
+    </div>
+<% } %>

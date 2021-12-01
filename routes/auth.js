@@ -27,6 +27,7 @@ const {
     showUpdateProfileFormAdmin,
     updateProfileAdmin
 } = require('../controller/authController')
+const { allDonationsDonar } = require('../controller/donationController')
 
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth')
 
@@ -36,6 +37,8 @@ router.route('/donar/dashboard').get(isAuthenticatedUser, authorizeRoles('user')
 router.route('/admin/dashboard').get(isAuthenticatedUser, authorizeRoles('admin'), showAdminDashboard);
 router.route('/register').post(registerUser);
 router.route('/login').post(loginUser)
+
+router.route('/donar/search').get(isAuthenticatedUser, authorizeRoles('user'), allDonationsDonar);
 
 router.route('/password/forgot').get(forgotPasswordForm)
 

@@ -1,6 +1,7 @@
 const Donation = require('../models/donation')
 const Blood = require('../models/blood')
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors')
+const APIFeatures = require('../utils/apiFeatures')
 const ErrorHandler = require('../utils/errorHandler')
 
 
@@ -71,6 +72,20 @@ exports.allDonations = catchAsyncErrors( async(req, res, next) => {
         donations
     })
 })
+// get approved donations => donar/donations?keyword:address
+exports.allDonationsDonar = catchAsyncErrors(async (req, res, next) => {
+    const apiFeatures = new APIFeatures(Donation.find({ status: 'approved' }).populate('user', 'name'), req.query)
+                        .search()
+    const donations = await apiFeatures.query;
+    res.render('backend/donar/search', {
+        donations
+    })
+    // res.status(200).json({
+    //     count: donations.length,
+    //     donations
+    // })
+})
+
 // donation history => admin/donations/history
 exports.donationHistory = catchAsyncErrors(async (req, res, next) => {
     const donations = await Donation.find({ status : ['rejected' , 'approved'] }).populate('user','name email');

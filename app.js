@@ -4,7 +4,13 @@ const errorMiddleware = require('./middlewares/errors')
 const cookieParser = require('cookie-parser')
 const path = require('path')
 const methodOverride = require('method-override')
+
 app.set('view engine', 'ejs')
+
+// load static files
+app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use("/uploads",express.static("uploads"))
+
 
 app.get('/',(req, res) => res.render('frontend/index'))
 
@@ -15,8 +21,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(cookieParser())
 
-// load static files
-app.use('/static', express.static(path.join(__dirname, 'public')))
+
 
 // import all routes
 const blood = require('./routes/blood')

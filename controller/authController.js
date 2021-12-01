@@ -211,9 +211,11 @@ exports.showUpdateProfileFormAdmin = async(req, res, next) => {
 }
 // update user profile => /me/update
 exports.updateProfile = catchAsyncErrors( async(req, res, next) => {
+    
     const newUserData = {
        name: req.body.name,
-       email: req.body.email 
+       email: req.body.email,
+       avatar: req.file.filename
     }
 
     const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
@@ -228,7 +230,8 @@ exports.updateProfile = catchAsyncErrors( async(req, res, next) => {
 exports.updateProfileAdmin = catchAsyncErrors(async (req, res, next) => {
     const newUserData = {
         name: req.body.name,
-        email: req.body.email 
+        email: req.body.email,
+        avatar: req.file.filename
      }
  
      const user = await User.findByIdAndUpdate(req.user.id, newUserData, {

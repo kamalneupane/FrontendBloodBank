@@ -5,7 +5,18 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors')
 exports.showBloodForm = (req, res, next) => res.render('backend/admin/bloodstock')
 // create new Blood Group
 exports.newBlood = catchAsyncErrors( async (req, res, next) => {
-    const blood = await Blood.create(req.body);
+    const { name, units } = req.body;
+    if(!name || !units){
+        return next(new ErrorHandler('All fields are required',400))
+    }
+    if(units < 0){
+        return next(new ErrorHandler('Units cannot be less than zero', 400))
+    }
+    let blood = await Blood.findOne({ name});
+    if(blood){
+        return next(new ErrorHandler('Sorry dublicate entry cannot be accepted', 400))
+    }
+    blood = await Blood.create(req.body);
     res.redirect('/admin/dashboard')
 })
 exports.editblood = catchAsyncErrors(async(req, res, next) => {
@@ -41,6 +52,14 @@ exports.getSingleBlood = catchAsyncErrors ( async(req, res, next) => {
 })
 // update blood group
 exports.updateBlood = catchAsyncErrors ( async( req, res, next) => {
+    const { name, units } = req.body;
+    if(!name || !units){
+        return next(new ErrorHandler('All fields are required',400))
+    }
+    if(units < 0){
+        return next(new ErrorHandler('Units cannot be less than zero', 400))
+    }
+    
     let blood = await Blood.findById(req.params.id);
     if(!blood){
         return next(new ErrorHandler('Blood not found', 404))

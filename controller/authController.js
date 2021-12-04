@@ -167,14 +167,16 @@ exports.resetPassword = catchAsyncErrors(async( req, res, next) => {
 exports.getUserProfile = catchAsyncErrors( async(req, res, next) => {
     const user = await User.findById(req.user.id);
     res.render('backend/donar/profile', {
-        user
+        user,
+        message: req.flash('message')
     })
 }) 
 // get currently logged in admin details => /admin/me
 exports.getAdminProfile = catchAsyncErrors( async (req, res, next) => {
     const user = await User.findById(req.user.id);
     res.render('backend/admin/profile',{
-        user
+        user,
+        message: req.flash('message')
     })
 });
 // show change password form
@@ -197,6 +199,7 @@ exports.updatePassword = catchAsyncErrors( async(req, res, next) => {
     await user.save();
 
     // sendToken(user, 200, res);
+    req.flash('message','Password changed successfully and')
     res.redirect('/logout');
 
 })
@@ -217,34 +220,49 @@ exports.showUpdateProfileFormAdmin = async(req, res, next) => {
 // update user profile => /me/update
 exports.updateProfile = catchAsyncErrors( async(req, res, next) => {
     
-    const newUserData = {
-       name: req.body.name,
-       email: req.body.email,
-       avatar: req.file.filename
+    if(req.file){
+        var newUserData = {
+            name: req.body.name,
+            email: req.body.email,
+            avatar: req.file.filename
+         }
     }
-
+    else{
+        var newUserData = {
+            name: req.body.name,
+            email: req.body.email,
+         }
+    }
     const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
         new: true,
         runValidators: true,
         useFindAndModify: false
     })
-
+    req.flash('message','Profile updated successfully')
     res.redirect('/donar/me')
 })
 // update admin profile => admin/me/update
 exports.updateProfileAdmin = catchAsyncErrors(async (req, res, next) => {
-    const newUserData = {
-        name: req.body.name,
-        email: req.body.email,
-        avatar: req.file.filename
-     }
+    if(req.file){
+        var newUserData = {
+            name: req.body.name,
+            email: req.body.email,
+            avatar: req.file.filename
+         }
+    }
+    else{
+        var newUserData = {
+            name: req.body.name,
+            email: req.body.email,
+         }
+    }
  
      const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
          new: true,
          runValidators: true,
          useFindAndModify: false
      })
- 
+     req.flash('message','Profile updated successfully')
      res.redirect('/admin/me');
 })
 

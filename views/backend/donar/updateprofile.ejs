@@ -17,6 +17,13 @@
                 <label for="avatar">Image:</label>
                 <input type="file" name="avatar" id="avatar" value="<%= user.avatar %>" class="form-control" >
             </div>
+            <div>
+                <% if (typeof user.avatar !== 'undefined') { %>
+                    <img src="/uploads/<%= user.avatar %>" alt="Image" style="width: 100px; height: 100px;">
+                <% } else { %>
+                    <p class="lead">Please upload your profile</p>
+                <% }%>
+            </div>
             <button type="submit" class="btn btn-success mt-2 mb-2 rounded-pill">Update</button>
         </form>
     </div>

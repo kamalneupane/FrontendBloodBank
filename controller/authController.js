@@ -9,7 +9,7 @@ const Request = require('../models/request')
 const Blood = require('../models/blood') 
 
 
-exports.showLoginPage = (req, res) => res.render('frontend/login')
+exports.showLoginPage = (req, res) => res.render('frontend/login', { message: req.flash('message')})
 exports.showRegisterPage = (req, res) => res.render('frontend/register')
 exports.showAdminDashboard = async (req, res, next) => {
     
@@ -33,14 +33,16 @@ exports.showAdminDashboard = async (req, res, next) => {
         donation,
         request,
         total_donar,
-        user: req.user
+        user: req.user,
+        message: req.flash('message')
     })
 }
 exports.showDonarDashboard = async (req, res) => {
     const bloods = await Blood.find();
     res.render('backend/donar/index', { 
         bloods,
-        user: req.user 
+        user: req.user,
+        message: req.flash('message')
     })
 }
 exports.registerUser = catchAsyncErrors(async(req, res, next) => {
@@ -58,6 +60,7 @@ exports.registerUser = catchAsyncErrors(async(req, res, next) => {
     })
 
     sendToken(user, 200, res)
+    req.flash('message','Register successfully, Please login')
     res.redirect('/login')
 })
 // login user
@@ -79,8 +82,10 @@ exports.loginUser = catchAsyncErrors( async (req, res, next) => {
     sendToken(user, 200, res);
 
     if(user.role === 'admin'){
+        req.flash('message','Login successfully')
         return res.redirect('/admin/dashboard')
     }
+    req.flash('message','Login successfully')
     res.redirect('donar/dashboard')
 })
 
@@ -249,6 +254,7 @@ exports.logoutUser = catchAsyncErrors( async (req, res, next) => {
         expires: new Date(Date.now()),
         httpOnly: true
     })
+    req.flash('message','Logged out successfully')
     res.redirect('/');
 })
 
@@ -307,11 +313,11 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler(`User not found with ${req.params.id}`, 400))
     }
 
-    deleteUserDonation(req.params.id)
-    deleteUserRequest(req.params.id)
+    // deleteUserDonation(req.params.id)
+    // deleteUserRequest(req.params.id)
 
 
-    // await user.remove();
+    await user.remove();
 
     
 
@@ -319,15 +325,15 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
 
 })
 
-async function deleteUserDonation(id){
-    const donations = await Donation.find({ user: id })
-    if(donations.length < 1 || donations === undefined) return 
-    // await donations.remove()
-}
+// async function deleteUserDonation(id){
+//     const donations = await Donation.find({ user: id })
+//     if(donations.length < 1 || donations === undefined) return 
+//     // await donations.remove()
+// }
 
-async function deleteUserRequest(id){
-    const requests = await Request.find({ user: id})
-    if(requests.length < 1 || requests === undefined) return 
-    console.log('working fine')
-    // await requests.remove()
-}
+// async function deleteUserRequest(id){
+//     const requests = await Request.find({ user: id})
+//     if(requests.length < 1 || requests === undefined) return 
+//     console.log('working fine')
+//     // await requests.remove()
+// }

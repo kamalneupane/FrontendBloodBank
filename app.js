@@ -37,5 +37,9 @@ app.use(donation)
 
 app.use(errorMiddleware)
 
+app.use(function(req, res, next) {
+    res.status(404).render('404'); 
+});
+
 
 module.exports = app

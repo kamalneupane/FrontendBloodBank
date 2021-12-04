@@ -43,6 +43,7 @@ exports.newDonation = catchAsyncErrors(async (req, res, next) => {
         address,
         user: req.user._id
     })
+    req.flash('message','Donation request made successfully')
     res.redirect('/donations/me')
 });
 // get single donation => donation/:id
@@ -62,7 +63,8 @@ exports.myDonations = catchAsyncErrors(async(req, res, next) => {
     const donations = await Donation.find({ user: req.user.id });
 
     res.render('backend/donar/donationhistory', {
-        donations
+        donations,
+        message: req.flash('message')
     })
 })
 // get all donations => admin/donations

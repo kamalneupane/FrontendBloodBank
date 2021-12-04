@@ -39,6 +39,7 @@ exports.newRequest = catchAsyncErrors(async(req, res, next) => {
         address,
         user: req.user._id
     });
+    req.flash('message','Blood request made successfully')
     res.redirect('/requests/me')
 });
 
@@ -59,7 +60,8 @@ exports.myRequest = catchAsyncErrors( async (req, res, next) => {
     const requests = await Request.find({ user: req.user.id })
 
     res.render('backend/donar/requesthistory', {
-        requests
+        requests,
+        message: req.flash('message')
     })
 })
 // get all request => admin/requests

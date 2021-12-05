@@ -5,10 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
+    "dev": "SET NODE_ENV=DEVELOPMENT& nodemon server.js",
+    "prod": "SET NODE_ENV=PRODUCTION& nodemon server.js",
     "seeder": "node utils/adminSeeder.js"
   },
-  "author": "",
+  "author": "Kamal Neupane",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

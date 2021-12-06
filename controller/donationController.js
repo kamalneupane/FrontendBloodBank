@@ -10,7 +10,7 @@ exports.showDonationForm = catchAsyncErrors ( async (req,res) => {
     if(!bloods){
         return next(new ErrorHandler('No blood found', 404))
     }
-    res.render('backend/donar/donateform',{ 
+    res.render('backend/donar/donateform',{
         user: req.user,
         bloods
     })
@@ -19,22 +19,26 @@ exports.showDonationForm = catchAsyncErrors ( async (req,res) => {
 exports.newDonation = catchAsyncErrors(async (req, res, next) => {
     const id = req.body.blood;
     const bloodname = await Blood.findById(id);
+    if(!req.body.units){
+        return next(new ErrorHandler('Please enter all fields', 400))
+    }
     const donateGroup = 
-        { 
+        {
             name: bloodname.name,
             blood: id,
             units: req.body.units
-        }
-    ;
+        };
     
-
+    
     const {
         age,
         disease,
         phone,
         address
     } = req.body;
-    
+    if(!age || !disease || !phone || !address){
+        return next(new ErrorHandler('All fields are required', 400))
+    }
     const donation = await Donation.create({
         donateGroup,
         age,
@@ -63,6 +67,7 @@ exports.myDonations = catchAsyncErrors(async(req, res, next) => {
     const donations = await Donation.find({ user: req.user.id });
 
     res.render('backend/donar/donationhistory', {
+        user: req.user,
         donations,
         message: req.flash('message')
     })
@@ -80,7 +85,8 @@ exports.allDonationsDonar = catchAsyncErrors(async (req, res, next) => {
                         .search()
     const donations = await apiFeatures.query;
     res.render('backend/donar/search', {
-        donations
+        donations,
+        user: req.user
     })
     // res.status(200).json({
     //     count: donations.length,
@@ -141,5 +147,6 @@ exports.deleteDonation = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Donation not found', 404))
     }
     await donation.remove();
+    req.flash('message','Donation Request deleted successfully')
     res.redirect('/admin/donations')
 })

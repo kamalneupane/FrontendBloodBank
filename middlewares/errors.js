@@ -10,7 +10,7 @@ module.exports = (err, req, res, next) => {
             stack: err.stack
         })
     }
-    if(process.env.NODE_ENv === 'PRODUCTION'){
+    if(process.env.NODE_ENV === 'PRODUCTION'){
         let error = {...err}
         error.message = err.message
 

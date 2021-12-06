@@ -50,7 +50,7 @@ exports.registerUser = catchAsyncErrors(async(req, res, next) => {
     
     let user = await User.findOne({ email });
     if(user){
-        return next(new ErrorHandler('Donar already registered with that email', 404))
+        return next(new ErrorHandler('User already registered with that email', 404))
     }
     
     user = await User.create({
@@ -181,7 +181,9 @@ exports.getAdminProfile = catchAsyncErrors( async (req, res, next) => {
 });
 // show change password form
 exports.showChangePasswordForm = (req, res, next) => {
-    res.render('backend/donar/changepassword')
+    res.render('backend/donar/changepassword',{
+        user: req.user
+    })
 }
 // show change password form Admin
 exports.showChangePasswordFormAdmin = (req, res, next) => {
@@ -276,15 +278,16 @@ exports.logoutUser = catchAsyncErrors( async (req, res, next) => {
     res.redirect('/');
 })
 
-
-
 // Admin routes
 
 // Get all users
 exports.getAllUsers = catchAsyncErrors( async (req, res, next) => {
     const users = await User.find({ role: "user"});
 
-    res.render('backend/admin/donarlist',{ users })
+    res.render('backend/admin/donarlist',{ 
+        users,
+        message: req.flash('message')
+     })
 })
 
 // get User details => admin/user/:id
@@ -320,7 +323,7 @@ exports.updateUser = catchAsyncErrors( async(req, res, next) => {
         runValidators: true,
         useFindAndModify: false
     })
-
+    req.flash('message','User updated successfully')
     res.redirect('/admin/users')
 })
 // delete user => admin/user/:id
@@ -331,23 +334,22 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler(`User not found with ${req.params.id}`, 400))
     }
 
-    // deleteUserDonation(req.params.id)
+    deleteUserDonation(req.params.id)
     // deleteUserRequest(req.params.id)
 
 
     await user.remove();
 
     
-
+    req.flash('message','User Deleted successfully')
     res.redirect('/admin/users')
 
 })
 
-// async function deleteUserDonation(id){
-//     const donations = await Donation.find({ user: id })
-//     if(donations.length < 1 || donations === undefined) return 
-//     // await donations.remove()
-// }
+async function deleteUserDonation(id){
+    const donations = await Donation.find({ user: id })
+    console.log(donations)
+}
 
 // async function deleteUserRequest(id){
 //     const requests = await Request.find({ user: id})

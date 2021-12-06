@@ -17,6 +17,7 @@ exports.newBlood = catchAsyncErrors( async (req, res, next) => {
         return next(new ErrorHandler('Sorry dublicate entry cannot be accepted', 400))
     }
     blood = await Blood.create(req.body);
+    req.flash('message','Blood Group created successfully')
     res.redirect('/admin/dashboard')
 })
 exports.editblood = catchAsyncErrors(async(req, res, next) => {
@@ -69,6 +70,7 @@ exports.updateBlood = catchAsyncErrors ( async( req, res, next) => {
         runValidators: true,
         useFindAndModify: false
     })
+    req.flash('message','Blood Group Updated successfully')
     res.redirect('/admin/dashboard')
 })
 // delete blood
@@ -78,5 +80,6 @@ exports.deleteBlood = catchAsyncErrors ( async(req, res, next) => {
         return next(new ErrorHandler('Blood not found',404))
     }
     await blood.remove();
+    req.flash('message','Blood group deleted successfully')
     res.redirect('/admin/dashboard')
 })

@@ -18,7 +18,9 @@ exports.showRequestForm = catchAsyncErrors ( async (req,res) => {
 exports.newRequest = catchAsyncErrors(async(req, res, next) => {
     const id = req.body.blood;
     const bloodname = await Blood.findById(id);
-
+    if(!req.body.units){
+        return next(new ErrorHandler('Please enter all fields', 400))
+    }
     const requestGroup = {
         name: bloodname.name,
         blood: id,
@@ -30,7 +32,9 @@ exports.newRequest = catchAsyncErrors(async(req, res, next) => {
         phone,
         address
     } = req.body;
-
+    if(!age || !reason || !phone || !address){
+        return next(new ErrorHandler('All fields are required', 400))
+    }
     const request = await Request.create({
         requestGroup,
         age,
@@ -60,6 +64,7 @@ exports.myRequest = catchAsyncErrors( async (req, res, next) => {
     const requests = await Request.find({ user: req.user.id })
 
     res.render('backend/donar/requesthistory', {
+        user: req.user,
         requests,
         message: req.flash('message')
     })
